@@ -19,6 +19,7 @@ import (
 	"testing"
 )
 
+<<<<<<< HEAD
 func runMarkdownReference(input string, flag int) string {
 	renderer := HtmlRenderer(0, "", "")
 	return string(Markdown([]byte(input), renderer, flag))
@@ -71,7 +72,10 @@ func doTestsReference(t *testing.T, files []string, flag int) {
 	}
 }
 
+=======
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 func TestReference(t *testing.T) {
+	t.Parallel()
 	files := []string{
 		"Amps and angle encoding",
 		"Auto links",
@@ -100,6 +104,7 @@ func TestReference(t *testing.T) {
 }
 
 func TestReference_EXTENSION_NO_EMPTY_LINE_BEFORE_BLOCK(t *testing.T) {
+	t.Parallel()
 	files := []string{
 		"Amps and angle encoding",
 		"Auto links",
@@ -124,5 +129,53 @@ func TestReference_EXTENSION_NO_EMPTY_LINE_BEFORE_BLOCK(t *testing.T) {
 		"Tabs",
 		"Tidyness",
 	}
-	doTestsReference(t, files, EXTENSION_NO_EMPTY_LINE_BEFORE_BLOCK)
+	doTestsReference(t, files, NoEmptyLineBeforeBlock)
+}
+
+// benchResultAnchor is an anchor variable to store the result of a benchmarked
+// code so that compiler could never optimize away the call to runMarkdown()
+var benchResultAnchor string
+
+func BenchmarkReference(b *testing.B) {
+	params := TestParams{extensions: CommonExtensions}
+	files := []string{
+		"Amps and angle encoding",
+		"Auto links",
+		"Backslash escapes",
+		"Blockquotes with code blocks",
+		"Code Blocks",
+		"Code Spans",
+		"Hard-wrapped paragraphs with list-like lines",
+		"Horizontal rules",
+		"Inline HTML (Advanced)",
+		"Inline HTML (Simple)",
+		"Inline HTML comments",
+		"Links, inline style",
+		"Links, reference style",
+		"Links, shortcut references",
+		"Literal quotes in titles",
+		"Markdown Documentation - Basics",
+		"Markdown Documentation - Syntax",
+		"Nested blockquotes",
+		"Ordered and unordered lists",
+		"Strong and em together",
+		"Tabs",
+		"Tidyness",
+	}
+	var tests []string
+	for _, basename := range files {
+		filename := filepath.Join("testdata", basename+".text")
+		inputBytes, err := ioutil.ReadFile(filename)
+		if err != nil {
+			b.Errorf("Couldn't open '%s', error: %v\n", filename, err)
+			continue
+		}
+		tests = append(tests, string(inputBytes))
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		for _, test := range tests {
+			benchResultAnchor = runMarkdown(test, params)
+		}
+	}
 }

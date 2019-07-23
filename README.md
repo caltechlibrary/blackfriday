@@ -18,14 +18,22 @@ It started as a translation from C of [Sundown][3].
 Installation
 ------------
 
+<<<<<<< HEAD
 Blackfriday is compatible with any modern Go release. With Go and git installed:
 
     go get -u gopkg.in/russross/blackfriday.v2
 
 will download, compile, and install the package into your `$GOPATH` directory
 hierarchy.
+=======
+Blackfriday is compatible with any modern Go release. With Go 1.7 and git
+installed:
+
+    go get gopkg.in/russross/blackfriday.v2
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 
 
+<<<<<<< HEAD
 Versions
 --------
 
@@ -76,11 +84,48 @@ https://github.com/golang/dep/blob/master/docs/FAQ.md#how-do-i-constrain-a-trans
 
 Meanwhile, `dep` team is working on a more general solution to the constraints
 on transitive dependencies problem: https://github.com/golang/dep/issues/1124.
+=======
+    import "gopkg.in/russross/blackfriday.v2"
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 
+
+
+Versions
+--------
+
+Currently maintained and recommended version of Blackfriday is `v2`. It's being
+developed on its own branch: https://github.com/russross/blackfriday/tree/v2 and the
+documentation is available at
+https://godoc.org/gopkg.in/russross/blackfriday.v2.
+
+It is `go get`-able via via [gopkg.in][6] at `gopkg.in/russross/blackfriday.v2`,
+but we highly recommend using package management tool like [dep][7] or
+[Glide][8] and make use of semantic versioning. With package management you
+should import `github.com/russross/blackfriday` and specify that you're using
+version 2.0.0.
+
+Version 2 offers a number of improvements over v1:
+
+* Cleaned up API
+* A separate call to [`Parse`][4], which produces an abstract syntax tree for
+  the document
+* Latest bug fixes
+* Flexibility to easily add your own rendering extensions
+
+Potential drawbacks:
+
+* Our benchmarks show v2 to be slightly slower than v1. Currently in the
+  ballpark of around 15%.
+* API breakage. If you can't afford modifying your code to adhere to the new API
+  and don't care too much about the new features, v2 is probably not for you.
+* Several bug fixes are trailing behind and still need to be forward-ported to
+  v2. See issue [#348](https://github.com/russross/blackfriday/issues/348) for
+  tracking.
 
 Usage
 -----
 
+<<<<<<< HEAD
 ### v1
 
 For basic usage, it is as simple as getting your input into a byte
@@ -88,12 +133,21 @@ slice and calling:
 
 ```go
 output := blackfriday.MarkdownBasic(input)
-```
-
-This renders it with no extensions enabled. To get a more useful
-feature set, use this instead:
+=======
+For the most sensible markdown processing, it is as simple as getting your input
+into a byte slice and calling:
 
 ```go
+output := blackfriday.Run(input)
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
+```
+
+Your input will be parsed and the output rendered with a set of most popular
+extensions enabled. If you want the most basic feature set, corresponding with
+the bare Markdown specification, use:
+
+```go
+<<<<<<< HEAD
 output := blackfriday.MarkdownCommon(input)
 ```
 
@@ -111,6 +165,8 @@ extensions enabled. If you want the most basic feature set, corresponding with
 the bare Markdown specification, use:
 
 ```go
+=======
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 output := blackfriday.Run(input, blackfriday.WithNoExtensions())
 ```
 
@@ -135,11 +191,18 @@ html := bluemonday.UGCPolicy().SanitizeBytes(unsafe)
 
 ### Custom options, v1
 
+<<<<<<< HEAD
 If you want to customize the set of options, first get a renderer
 (currently only the HTML output engine), then use it to
 call the more general `Markdown` function. For examples, see the
 implementations of `MarkdownBasic` and `MarkdownCommon` in
 `markdown.go`.
+=======
+If you want to customize the set of options, use `blackfriday.WithExtensions`,
+`blackfriday.WithRenderer` and `blackfriday.WithRefOverride`.
+
+### `blackfriday-tool`
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 
 ### Custom options, v2
 
@@ -171,6 +234,7 @@ dependencies and library versions.
 
 Blackfriday includes an algorithm for creating sanitized anchor names
 corresponding to a given input text. This algorithm is used to create
+<<<<<<< HEAD
 anchors for headings when `EXTENSION_AUTO_HEADER_IDS` is enabled. The
 algorithm has a specification, so that other packages can create
 compatible anchor names and links to those anchors.
@@ -178,6 +242,15 @@ compatible anchor names and links to those anchors.
 The specification is located at https://godoc.org/github.com/russross/blackfriday#hdr-Sanitized_Anchor_Names.
 
 [`SanitizedAnchorName`](https://godoc.org/github.com/russross/blackfriday#SanitizedAnchorName) exposes this functionality, and can be used to
+=======
+anchors for headings when `AutoHeadingIDs` extension is enabled. The
+algorithm has a specification, so that other packages can create
+compatible anchor names and links to those anchors.
+
+The specification is located at https://godoc.org/gopkg.in/russross/blackfriday.v2#hdr-Sanitized_Anchor_Names.
+
+[`SanitizedAnchorName`](https://godoc.org/gopkg.in/russross/blackfriday.v2#SanitizedAnchorName) exposes this functionality, and can be used to
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 create compatible links to the anchor names generated by blackfriday.
 This algorithm is also implemented in a small standalone package at
 [`github.com/shurcooL/sanitized_anchor_name`](https://godoc.org/github.com/shurcooL/sanitized_anchor_name). It can be useful for clients
@@ -250,7 +323,7 @@ implements the following extensions:
     and supply a language (to make syntax highlighting simple). Just
     mark it like this:
 
-        ``` go
+        ```go
         func getTrue() bool {
             return true
         }
@@ -273,7 +346,7 @@ implements the following extensions:
 
         Cat
         : Fluffy animal everyone likes
-        
+
         Internet
         : Vector of transmission for pictures of cats
 
@@ -284,7 +357,7 @@ implements the following extensions:
     end of the document. A footnote looks like this:
 
         This is a footnote.[^1]
-        
+
         [^1]: the footnote text.
 
 *   **Autolinking**. Blackfriday can find URLs that have not been
@@ -293,10 +366,8 @@ implements the following extensions:
 *   **Strikethrough**. Use two tildes (`~~`) to mark text that
     should be crossed out.
 
-*   **Hard line breaks**. With this extension enabled (it is off by
-    default in the `MarkdownBasic` and `MarkdownCommon` convenience
-    functions), newlines in the input translate into line breaks in
-    the output.
+*   **Hard line breaks**. With this extension enabled newlines in the input
+    translate into line breaks in the output. This extension is off by default.
 
 *   **Smart quotes**. Smartypants-style punctuation substitution is
     supported, turning normal double- and single-quote marks into
@@ -332,6 +403,7 @@ are a few of note:
 *   [markdownfmt](https://github.com/shurcooL/markdownfmt): like gofmt,
     but for markdown.
 
+<<<<<<< HEAD
 *   [LaTeX output](https://gitlab.com/ambrevar/blackfriday-latex):
     renders output as LaTeX.
 
@@ -340,7 +412,14 @@ are a few of note:
     highlighting library. bfchroma is only compatible with v2 of Blackfriday and
     provides a drop-in renderer ready to use with Blackfriday, as well as
     options and means for further customization.
+=======
+*   [LaTeX output](https://github.com/Ambrevar/Blackfriday-LaTeX):
+    renders output as LaTeX.
 
+*   [Blackfriday-Confluence](https://github.com/kentaro-m/blackfriday-confluence): provides a [Confluence Wiki Markup](https://confluence.atlassian.com/doc/confluence-wiki-markup-251003035.html) renderer.
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
+
+*   [Blackfriday-Slack](https://github.com/karriereat/blackfriday-slack): converts markdown to slack message style
 
 TODO
 ----
@@ -364,6 +443,7 @@ License
    [4]: https://godoc.org/gopkg.in/russross/blackfriday.v2#Parse "Parse func"
    [5]: https://github.com/microcosm-cc/bluemonday "Bluemonday"
    [6]: https://labix.org/gopkg.in "gopkg.in"
+<<<<<<< HEAD
    [7]: https://github.com/golang/dep/ "dep"
    [8]: https://github.com/Masterminds/glide "Glide"
 
@@ -371,3 +451,5 @@ License
    [BuildURL]: https://travis-ci.org/russross/blackfriday
    [GodocV2SVG]: https://godoc.org/gopkg.in/russross/blackfriday.v2?status.svg
    [GodocV2URL]: https://godoc.org/gopkg.in/russross/blackfriday.v2
+=======
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db

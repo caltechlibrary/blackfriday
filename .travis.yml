@@ -1,7 +1,10 @@
 sudo: false
 language: go
 go:
+<<<<<<< HEAD
   - "1.9.x"
+=======
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
   - "1.10.x"
   - "1.11.x"
   - tip
@@ -15,4 +18,8 @@ script:
   - go get -t -v ./...
   - diff -u <(echo -n) <(gofmt -d -s .)
   - go tool vet .
+<<<<<<< HEAD
   - go test -v -race ./...
+=======
+  - go test -v ./...
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db

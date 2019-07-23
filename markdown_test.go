@@ -13,6 +13,7 @@
 
 package blackfriday
 
+<<<<<<< HEAD
 import (
 	"testing"
 )
@@ -53,6 +54,12 @@ func doTests(t *testing.T, tests []string) {
 }
 
 func TestDocument(t *testing.T) {
+=======
+import "testing"
+
+func TestDocument(t *testing.T) {
+	t.Parallel()
+>>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	var tests = []string{
 		// Empty document.
 		"",
