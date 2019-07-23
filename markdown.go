@@ -15,9 +15,6 @@ import (
 	"unicode/utf8"
 )
 
-<<<<<<< HEAD
-const VERSION = "1.5"
-=======
 //
 // Markdown parsing and processing
 //
@@ -29,48 +26,10 @@ const Version = "2.0"
 // Extensions is a bitwise or'ed collection of enabled Blackfriday's
 // extensions.
 type Extensions int
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 
 // These are the supported markdown parsing extensions.
 // OR these values together to select multiple extensions.
 const (
-<<<<<<< HEAD
-	EXTENSION_NO_INTRA_EMPHASIS          = 1 << iota // ignore emphasis markers inside words
-	EXTENSION_TABLES                                 // render tables
-	EXTENSION_FENCED_CODE                            // render fenced code blocks
-	EXTENSION_AUTOLINK                               // detect embedded URLs that are not explicitly marked
-	EXTENSION_STRIKETHROUGH                          // strikethrough text using ~~test~~
-	EXTENSION_LAX_HTML_BLOCKS                        // loosen up HTML block parsing rules
-	EXTENSION_SPACE_HEADERS                          // be strict about prefix header rules
-	EXTENSION_HARD_LINE_BREAK                        // translate newlines into line breaks
-	EXTENSION_TAB_SIZE_EIGHT                         // expand tabs to eight spaces instead of four
-	EXTENSION_FOOTNOTES                              // Pandoc-style footnotes
-	EXTENSION_NO_EMPTY_LINE_BEFORE_BLOCK             // No need to insert an empty line to start a (code, quote, ordered list, unordered list) block
-	EXTENSION_HEADER_IDS                             // specify header IDs  with {#id}
-	EXTENSION_TITLEBLOCK                             // Titleblock ala pandoc
-	EXTENSION_AUTO_HEADER_IDS                        // Create the header ID from the text
-	EXTENSION_BACKSLASH_LINE_BREAK                   // translate trailing backslashes into line breaks
-	EXTENSION_DEFINITION_LISTS                       // render definition lists
-	EXTENSION_JOIN_LINES                             // delete newline and join lines
-
-	commonHtmlFlags = 0 |
-		HTML_USE_XHTML |
-		HTML_USE_SMARTYPANTS |
-		HTML_SMARTYPANTS_FRACTIONS |
-		HTML_SMARTYPANTS_DASHES |
-		HTML_SMARTYPANTS_LATEX_DASHES
-
-	commonExtensions = 0 |
-		EXTENSION_NO_INTRA_EMPHASIS |
-		EXTENSION_TABLES |
-		EXTENSION_FENCED_CODE |
-		EXTENSION_AUTOLINK |
-		EXTENSION_STRIKETHROUGH |
-		EXTENSION_SPACE_HEADERS |
-		EXTENSION_HEADER_IDS |
-		EXTENSION_BACKSLASH_LINE_BREAK |
-		EXTENSION_DEFINITION_LISTS
-=======
 	NoExtensions           Extensions = 0
 	NoIntraEmphasis        Extensions = 1 << iota // Ignore emphasis markers inside words
 	Tables                                        // Render tables
@@ -95,7 +54,6 @@ const (
 	CommonExtensions Extensions = NoIntraEmphasis | Tables | FencedCode |
 		Autolink | Strikethrough | SpaceHeadings | HeadingIDs |
 		BackslashLineBreak | DefinitionLists
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 )
 
 // ListType contains bitwise or'ed flags for list and list item objects.
@@ -183,47 +141,6 @@ var blockTags = map[string]struct{}{
 // Only an HTML implementation is provided in this repository, see the README
 // for external implementations.
 type Renderer interface {
-<<<<<<< HEAD
-	// block-level callbacks
-	BlockCode(out *bytes.Buffer, text []byte, infoString string)
-	BlockQuote(out *bytes.Buffer, text []byte)
-	BlockHtml(out *bytes.Buffer, text []byte)
-	Header(out *bytes.Buffer, text func() bool, level int, id string)
-	HRule(out *bytes.Buffer)
-	List(out *bytes.Buffer, text func() bool, flags int)
-	ListItem(out *bytes.Buffer, text []byte, flags int)
-	Paragraph(out *bytes.Buffer, text func() bool)
-	Table(out *bytes.Buffer, header []byte, body []byte, columnData []int)
-	TableRow(out *bytes.Buffer, text []byte)
-	TableHeaderCell(out *bytes.Buffer, text []byte, flags int)
-	TableCell(out *bytes.Buffer, text []byte, flags int)
-	Footnotes(out *bytes.Buffer, text func() bool)
-	FootnoteItem(out *bytes.Buffer, name, text []byte, flags int)
-	TitleBlock(out *bytes.Buffer, text []byte)
-
-	// Span-level callbacks
-	AutoLink(out *bytes.Buffer, link []byte, kind int)
-	CodeSpan(out *bytes.Buffer, text []byte)
-	DoubleEmphasis(out *bytes.Buffer, text []byte)
-	Emphasis(out *bytes.Buffer, text []byte)
-	Image(out *bytes.Buffer, link []byte, title []byte, alt []byte)
-	LineBreak(out *bytes.Buffer)
-	Link(out *bytes.Buffer, link []byte, title []byte, content []byte)
-	RawHtmlTag(out *bytes.Buffer, tag []byte)
-	TripleEmphasis(out *bytes.Buffer, text []byte)
-	StrikeThrough(out *bytes.Buffer, text []byte)
-	FootnoteRef(out *bytes.Buffer, ref []byte, id int)
-
-	// Low-level callbacks
-	Entity(out *bytes.Buffer, entity []byte)
-	NormalText(out *bytes.Buffer, text []byte)
-
-	// Header and footer
-	DocumentHeader(out *bytes.Buffer)
-	DocumentFooter(out *bytes.Buffer)
-
-	GetFlags() int
-=======
 	// RenderNode is the main rendering method. It will be called once for
 	// every leaf node and twice for every non-leaf node (first with
 	// entering=true, then with entering=false). The method should write its
@@ -245,7 +162,6 @@ type Renderer interface {
 
 	// RenderFooter is a symmetric counterpart of RenderHeader.
 	RenderFooter(w io.Writer, ast *Node)
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 }
 
 // Callback functions for inline parsing. One such function is defined
@@ -267,10 +183,6 @@ type Markdown struct {
 	// Footnotes need to be ordered as well as available to quickly check for
 	// presence. If a ref is also a footnote, it's stored both in refs and here
 	// in notes. Slice is nil if footnotes not enabled.
-<<<<<<< HEAD
-	notes       []*reference
-	notesRecord map[string]struct{}
-=======
 	notes []*reference
 
 	doc                  *Node
@@ -278,7 +190,6 @@ type Markdown struct {
 	oldTip               *Node
 	lastMatchedContainer *Node // = doc
 	allClosed            bool
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 }
 
 func (p *Markdown) getRef(refid string) (ref *reference, found bool) {
@@ -301,11 +212,6 @@ func (p *Markdown) getRef(refid string) (ref *reference, found bool) {
 	return ref, found
 }
 
-<<<<<<< HEAD
-func (p *parser) isFootnote(ref *reference) bool {
-	_, ok := p.notesRecord[string(ref.link)]
-	return ok
-=======
 func (p *Markdown) finalize(block *Node) {
 	above := block.Parent
 	block.open = false
@@ -334,7 +240,6 @@ func (p *Markdown) closeUnmatchedBlocks() {
 		}
 		p.allClosed = true
 	}
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 }
 
 //
@@ -402,64 +307,10 @@ func New(opts ...Option) *Markdown {
 	}
 	if p.extensions&Footnotes != 0 {
 		p.notes = make([]*reference, 0)
-		p.notesRecord = make(map[string]struct{})
 	}
 	return &p
 }
 
-<<<<<<< HEAD
-// first pass:
-// - normalize newlines
-// - extract references (outside of fenced code blocks)
-// - expand tabs (outside of fenced code blocks)
-// - copy everything else
-func firstPass(p *parser, input []byte) []byte {
-	var out bytes.Buffer
-	tabSize := TAB_SIZE_DEFAULT
-	if p.flags&EXTENSION_TAB_SIZE_EIGHT != 0 {
-		tabSize = TAB_SIZE_EIGHT
-	}
-	beg := 0
-	lastFencedCodeBlockEnd := 0
-	for beg < len(input) {
-		// Find end of this line, then process the line.
-		end := beg
-		for end < len(input) && input[end] != '\n' && input[end] != '\r' {
-			end++
-		}
-
-		if p.flags&EXTENSION_FENCED_CODE != 0 {
-			// track fenced code block boundaries to suppress tab expansion
-			// and reference extraction inside them:
-			if beg >= lastFencedCodeBlockEnd {
-				if i := p.fencedCodeBlock(&out, input[beg:], false); i > 0 {
-					lastFencedCodeBlockEnd = beg + i
-				}
-			}
-		}
-
-		// add the line body if present
-		if end > beg {
-			if end < lastFencedCodeBlockEnd { // Do not expand tabs while inside fenced code blocks.
-				out.Write(input[beg:end])
-			} else if refEnd := isReference(p, input[beg:], tabSize); refEnd > 0 {
-				beg += refEnd
-				continue
-			} else {
-				expandTabs(&out, input[beg:end], tabSize)
-			}
-		}
-
-		if end < len(input) && input[end] == '\r' {
-			end++
-		}
-		if end < len(input) && input[end] == '\n' {
-			end++
-		}
-		out.WriteByte('\n')
-
-		beg = end
-=======
 // Option customizes the Markdown processor's default behavior.
 type Option func(*Markdown)
 
@@ -467,7 +318,6 @@ type Option func(*Markdown)
 func WithRenderer(r Renderer) Option {
 	return func(p *Markdown) {
 		p.renderer = r
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	}
 }
 
@@ -802,12 +652,6 @@ func scanLinkRef(p *Markdown, data []byte, i int) (linkOffset, linkEnd, titleOff
 		i++
 	}
 	linkOffset = i
-<<<<<<< HEAD
-	if i == len(data) {
-		return
-	}
-=======
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	for i < len(data) && data[i] != ' ' && data[i] != '\t' && data[i] != '\n' && data[i] != '\r' {
 		i++
 	}
@@ -977,11 +821,7 @@ func ishorizontalspace(c byte) bool {
 	return c == ' ' || c == '\t'
 }
 
-<<<<<<< HEAD
-// Test if a character is a vertical whitespace character.
-=======
 // Test if a character is a vertical character.
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 func isverticalspace(c byte) bool {
 	return c == '\n' || c == '\r' || c == '\f' || c == '\v'
 }

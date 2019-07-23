@@ -130,11 +130,7 @@ func (r *SPRenderer) smartSingleQuote(out *bytes.Buffer, previousChar byte, text
 			if len(text) >= 3 {
 				nextChar = text[2]
 			}
-<<<<<<< HEAD
-			if smartQuoteHelper(out, previousChar, nextChar, 'd', &smrt.inDoubleQuote, false) {
-=======
 			if smartQuoteHelper(out, previousChar, nextChar, 'd', &r.inDoubleQuote, false) {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 				return 1
 			}
 		}
@@ -159,11 +155,7 @@ func (r *SPRenderer) smartSingleQuote(out *bytes.Buffer, previousChar byte, text
 	if len(text) > 1 {
 		nextChar = text[1]
 	}
-<<<<<<< HEAD
-	if smartQuoteHelper(out, previousChar, nextChar, 's', &smrt.inSingleQuote, false) {
-=======
 	if smartQuoteHelper(out, previousChar, nextChar, 's', &r.inSingleQuote, false) {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 		return 0
 	}
 
@@ -227,21 +219,13 @@ func (r *SPRenderer) smartDashLatex(out *bytes.Buffer, previousChar byte, text [
 	return 0
 }
 
-<<<<<<< HEAD
-func smartAmpVariant(out *bytes.Buffer, smrt *smartypantsData, previousChar byte, text []byte, quote byte, addNBSP bool) int {
-=======
 func (r *SPRenderer) smartAmpVariant(out *bytes.Buffer, previousChar byte, text []byte, quote byte, addNBSP bool) int {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	if bytes.HasPrefix(text, []byte("&quot;")) {
 		nextChar := byte(0)
 		if len(text) >= 7 {
 			nextChar = text[6]
 		}
-<<<<<<< HEAD
-		if smartQuoteHelper(out, previousChar, nextChar, quote, &smrt.inDoubleQuote, addNBSP) {
-=======
 		if smartQuoteHelper(out, previousChar, nextChar, quote, &r.inDoubleQuote, addNBSP) {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 			return 5
 		}
 	}
@@ -254,23 +238,14 @@ func (r *SPRenderer) smartAmpVariant(out *bytes.Buffer, previousChar byte, text 
 	return 0
 }
 
-<<<<<<< HEAD
-func smartAmp(angledQuotes, addNBSP bool) func(out *bytes.Buffer, smrt *smartypantsData, previousChar byte, text []byte) int {
-=======
 func (r *SPRenderer) smartAmp(angledQuotes, addNBSP bool) func(*bytes.Buffer, byte, []byte) int {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	var quote byte = 'd'
 	if angledQuotes {
 		quote = 'a'
 	}
 
-<<<<<<< HEAD
-	return func(out *bytes.Buffer, smrt *smartypantsData, previousChar byte, text []byte) int {
-		return smartAmpVariant(out, smrt, previousChar, text, quote, addNBSP)
-=======
 	return func(out *bytes.Buffer, previousChar byte, text []byte) int {
 		return r.smartAmpVariant(out, previousChar, text, quote, addNBSP)
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	}
 }
 
@@ -295,11 +270,7 @@ func (r *SPRenderer) smartBacktick(out *bytes.Buffer, previousChar byte, text []
 		if len(text) >= 3 {
 			nextChar = text[2]
 		}
-<<<<<<< HEAD
-		if smartQuoteHelper(out, previousChar, nextChar, 'd', &smrt.inDoubleQuote, false) {
-=======
 		if smartQuoteHelper(out, previousChar, nextChar, 'd', &r.inDoubleQuote, false) {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 			return 1
 		}
 	}
@@ -383,11 +354,7 @@ func (r *SPRenderer) smartDoubleQuoteVariant(out *bytes.Buffer, previousChar byt
 	if len(text) > 1 {
 		nextChar = text[1]
 	}
-<<<<<<< HEAD
-	if !smartQuoteHelper(out, previousChar, nextChar, quote, &smrt.inDoubleQuote, false) {
-=======
 	if !smartQuoteHelper(out, previousChar, nextChar, quote, &r.inDoubleQuote, false) {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 		out.WriteString("&quot;")
 	}
 
@@ -425,31 +392,6 @@ func NewSmartypantsRenderer(flags HTMLFlags) *SPRenderer {
 		smartAmpRegular     = r.smartAmp(false, false)
 		smartAmpRegularNBSP = r.smartAmp(false, true)
 
-<<<<<<< HEAD
-var (
-	smartAmpAngled      = smartAmp(true, false)
-	smartAmpAngledNBSP  = smartAmp(true, true)
-	smartAmpRegular     = smartAmp(false, false)
-	smartAmpRegularNBSP = smartAmp(false, true)
-)
-
-func smartypants(flags int) *smartypantsRenderer {
-	r := new(smartypantsRenderer)
-	addNBSP := flags&HTML_SMARTYPANTS_QUOTES_NBSP != 0
-	if flags&HTML_SMARTYPANTS_ANGLED_QUOTES == 0 {
-		r['"'] = smartDoubleQuote
-		if !addNBSP {
-			r['&'] = smartAmpRegular
-		} else {
-			r['&'] = smartAmpRegularNBSP
-		}
-	} else {
-		r['"'] = smartAngledDoubleQuote
-		if !addNBSP {
-			r['&'] = smartAmpAngled
-		} else {
-			r['&'] = smartAmpAngledNBSP
-=======
 		addNBSP = flags&SmartypantsQuotesNBSP != 0
 	)
 
@@ -466,7 +408,6 @@ func smartypants(flags int) *smartypantsRenderer {
 			r.callbacks['&'] = smartAmpAngled
 		} else {
 			r.callbacks['&'] = smartAmpAngledNBSP
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 		}
 	}
 	r.callbacks['\''] = r.smartSingleQuote

@@ -175,30 +175,6 @@ func codeSpan(p *Markdown, data []byte, offset int) (int, *Node) {
 }
 
 // newline preceded by two spaces becomes <br>
-<<<<<<< HEAD
-// newline without two spaces works when EXTENSION_HARD_LINE_BREAK is enabled
-func lineBreak(p *parser, out *bytes.Buffer, data []byte, offset int) int {
-	// remove trailing spaces from out
-	outBytes := out.Bytes()
-	end := len(outBytes)
-	eol := end
-	for eol > 0 && outBytes[eol-1] == ' ' {
-		eol--
-	}
-	out.Truncate(eol)
-
-	precededByTwoSpaces := offset >= 2 && data[offset-2] == ' ' && data[offset-1] == ' '
-	precededByBackslash := offset >= 1 && data[offset-1] == '\\' // see http://spec.commonmark.org/0.18/#example-527
-	precededByBackslash = precededByBackslash && p.flags&EXTENSION_BACKSLASH_LINE_BREAK != 0
-
-	if p.flags&EXTENSION_JOIN_LINES != 0 {
-		return 1
-	}
-
-	// should there be a hard line break here?
-	if p.flags&EXTENSION_HARD_LINE_BREAK == 0 && !precededByTwoSpaces && !precededByBackslash {
-		return 0
-=======
 func maybeLineBreak(p *Markdown, data []byte, offset int) (int, *Node) {
 	origOffset := offset
 	for offset < len(data) && data[offset] == ' ' {
@@ -210,7 +186,6 @@ func maybeLineBreak(p *Markdown, data []byte, offset int) (int, *Node) {
 			return offset - origOffset + 1, NewNode(Hardbreak)
 		}
 		return offset - origOffset, nil
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	}
 	return 0, nil
 }
@@ -297,15 +272,13 @@ func link(p *Markdown, data []byte, offset int) (int, *Node) {
 		i++
 	}
 
-	brace := 0
-
 	// look for the matching closing bracket
 	for level := 1; level > 0 && i < len(data); i++ {
 		switch {
 		case data[i] == '\n':
 			textHasNl = true
 
-		case isBackslashEscaped(data, i):
+		case data[i-1] == '\\':
 			continue
 
 		case data[i] == '[':
@@ -333,8 +306,8 @@ func link(p *Markdown, data []byte, offset int) (int, *Node) {
 		i++
 	}
 
-	switch {
 	// inline style link
+	switch {
 	case i < len(data) && data[i] == '(':
 		// skip initial whitespace
 		i++
@@ -345,27 +318,14 @@ func link(p *Markdown, data []byte, offset int) (int, *Node) {
 
 		linkB := i
 
-		// look for link end: ' " ), check for new opening braces and take this
-		// into account, this may lead for overshooting and probably will require
-		// some fine-tuning.
+		// look for link end: ' " )
 	findlinkend:
 		for i < len(data) {
 			switch {
 			case data[i] == '\\':
 				i += 2
 
-			case data[i] == '(':
-				brace++
-				i++
-
-			case data[i] == ')':
-				if brace <= 0 {
-					break findlinkend
-				}
-				brace--
-				i++
-
-			case data[i] == '\'' || data[i] == '"':
+			case data[i] == ')' || data[i] == '\'' || data[i] == '"':
 				break findlinkend
 
 			default:
@@ -544,7 +504,6 @@ func link(p *Markdown, data []byte, offset int) (int, *Node) {
 			}
 
 			p.notes = append(p.notes, ref)
-			p.notesRecord[string(ref.link)] = struct{}{}
 
 			link = ref.link
 			title = ref.title
@@ -555,16 +514,10 @@ func link(p *Markdown, data []byte, offset int) (int, *Node) {
 				return 0, nil
 			}
 
-<<<<<<< HEAD
-			if t == linkDeferredFootnote && !p.isFootnote(lr) {
-				lr.noteId = len(p.notes) + 1
-=======
 			if t == linkDeferredFootnote {
 				lr.noteID = len(p.notes) + 1
 				lr.footnote = footnoteNode
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 				p.notes = append(p.notes, lr)
-				p.notesRecord[string(lr.link)] = struct{}{}
 			}
 
 			// keep link and title from reference
@@ -634,11 +587,7 @@ func link(p *Markdown, data []byte, offset int) (int, *Node) {
 	return i, linkNode
 }
 
-<<<<<<< HEAD
-func (p *parser) inlineHTMLComment(out *bytes.Buffer, data []byte) int {
-=======
 func (p *Markdown) inlineHTMLComment(data []byte) int {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	if len(data) < 5 {
 		return 0
 	}
@@ -680,14 +629,8 @@ const (
 // '<' when tags or autolinks are allowed
 func leftAngle(p *Markdown, data []byte, offset int) (int, *Node) {
 	data = data[offset:]
-<<<<<<< HEAD
-	altype := LINK_TYPE_NOT_AUTOLINK
-	end := tagLength(data, &altype)
-	if size := p.inlineHTMLComment(out, data); size > 0 {
-=======
 	altype, end := tagLength(data)
 	if size := p.inlineHTMLComment(data); size > 0 {
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 		end = size
 	}
 	if end > 2 {
@@ -1077,7 +1020,7 @@ func isMailtoAutoLink(data []byte) int {
 			nb++
 
 		case '-', '.', '_':
-			// Do nothing.
+			break
 
 		case '>':
 			if nb == 1 {

@@ -28,27 +28,6 @@ type HTMLFlags int
 
 // HTML renderer configuration options.
 const (
-<<<<<<< HEAD
-	HTML_SKIP_HTML                 = 1 << iota // skip preformatted HTML blocks
-	HTML_SKIP_STYLE                            // skip embedded <style> elements
-	HTML_SKIP_IMAGES                           // skip embedded images
-	HTML_SKIP_LINKS                            // skip all links
-	HTML_SAFELINK                              // only link to trusted protocols
-	HTML_NOFOLLOW_LINKS                        // only link with rel="nofollow"
-	HTML_NOREFERRER_LINKS                      // only link with rel="noreferrer"
-	HTML_HREF_TARGET_BLANK                     // add a blank target
-	HTML_TOC                                   // generate a table of contents
-	HTML_OMIT_CONTENTS                         // skip the main contents (for a standalone table of contents)
-	HTML_COMPLETE_PAGE                         // generate a complete HTML page
-	HTML_USE_XHTML                             // generate XHTML output instead of HTML
-	HTML_USE_SMARTYPANTS                       // enable smart punctuation substitutions
-	HTML_SMARTYPANTS_FRACTIONS                 // enable smart fractions (with HTML_USE_SMARTYPANTS)
-	HTML_SMARTYPANTS_DASHES                    // enable smart dashes (with HTML_USE_SMARTYPANTS)
-	HTML_SMARTYPANTS_LATEX_DASHES              // enable LaTeX-style dashes (with HTML_USE_SMARTYPANTS and HTML_SMARTYPANTS_DASHES)
-	HTML_SMARTYPANTS_ANGLED_QUOTES             // enable angled double quotes (with HTML_USE_SMARTYPANTS) for double quotes rendering
-	HTML_SMARTYPANTS_QUOTES_NBSP               // enable "French guillemets" (with HTML_USE_SMARTYPANTS)
-	HTML_FOOTNOTE_RETURN_LINKS                 // generate a link at the end of a footnote to return to the source
-=======
 	HTMLFlagsNone           HTMLFlags = 0
 	SkipHTML                HTMLFlags = 1 << iota // Skip preformatted HTML blocks
 	SkipImages                                    // Skip embedded images
@@ -68,7 +47,6 @@ const (
 	SmartypantsAngledQuotes                       // Enable angled double quotes (with Smartypants) for double quotes rendering
 	SmartypantsQuotesNBSP                         // Enable « French guillemets » (with Smartypants)
 	TOC                                           // Generate a table of contents
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 )
 
 var (
@@ -238,61 +216,6 @@ func skipSpace(tag []byte, i int) int {
 	return i
 }
 
-<<<<<<< HEAD
-func (options *Html) BlockCode(out *bytes.Buffer, text []byte, info string) {
-	doubleSpace(out)
-
-	endOfLang := strings.IndexAny(info, "\t ")
-	if endOfLang < 0 {
-		endOfLang = len(info)
-	}
-	lang := info[:endOfLang]
-	if len(lang) == 0 || lang == "." {
-		out.WriteString("<pre><code>")
-	} else {
-		out.WriteString("<pre><code class=\"language-")
-		attrEscape(out, []byte(lang))
-		out.WriteString("\">")
-	}
-	attrEscape(out, text)
-	out.WriteString("</code></pre>\n")
-}
-
-func (options *Html) BlockQuote(out *bytes.Buffer, text []byte) {
-	doubleSpace(out)
-	out.WriteString("<blockquote>\n")
-	out.Write(text)
-	out.WriteString("</blockquote>\n")
-}
-
-func (options *Html) Table(out *bytes.Buffer, header []byte, body []byte, columnData []int) {
-	doubleSpace(out)
-	out.WriteString("<table>\n<thead>\n")
-	out.Write(header)
-	out.WriteString("</thead>\n\n<tbody>\n")
-	out.Write(body)
-	out.WriteString("</tbody>\n</table>\n")
-}
-
-func (options *Html) TableRow(out *bytes.Buffer, text []byte) {
-	doubleSpace(out)
-	out.WriteString("<tr>\n")
-	out.Write(text)
-	out.WriteString("\n</tr>\n")
-}
-
-func (options *Html) TableHeaderCell(out *bytes.Buffer, text []byte, align int) {
-	doubleSpace(out)
-	switch align {
-	case TABLE_ALIGNMENT_LEFT:
-		out.WriteString("<th align=\"left\">")
-	case TABLE_ALIGNMENT_RIGHT:
-		out.WriteString("<th align=\"right\">")
-	case TABLE_ALIGNMENT_CENTER:
-		out.WriteString("<th align=\"center\">")
-	default:
-		out.WriteString("<th>")
-=======
 func isRelativeLink(link []byte) (yes bool) {
 	// a tag begin with '#'
 	if link[0] == '#' {
@@ -307,7 +230,6 @@ func isRelativeLink(link []byte) (yes bool) {
 	// only the root '/'
 	if len(link) == 1 && link[0] == '/' {
 		return true
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 	}
 
 	// current directory : begin with "./"
@@ -438,21 +360,6 @@ func itemOpenCR(node *Node) bool {
 	return !ld.Tight && ld.ListFlags&ListTypeDefinition == 0
 }
 
-<<<<<<< HEAD
-func (options *Html) FootnoteRef(out *bytes.Buffer, ref []byte, id int) {
-	slug := slugify(ref)
-	out.WriteString(`<sup class="footnote-ref" id="`)
-	out.WriteString(`fnref:`)
-	out.WriteString(options.parameters.FootnoteAnchorPrefix)
-	out.Write(slug)
-	out.WriteString(`"><a href="#`)
-	out.WriteString(`fn:`)
-	out.WriteString(options.parameters.FootnoteAnchorPrefix)
-	out.Write(slug)
-	out.WriteString(`">`)
-	out.WriteString(strconv.Itoa(id))
-	out.WriteString(`</a></sup>`)
-=======
 func skipParagraphTags(node *Node) bool {
 	grandparent := node.Parent.Parent
 	if grandparent == nil || grandparent.Type != List {
@@ -460,7 +367,6 @@ func skipParagraphTags(node *Node) bool {
 	}
 	tightOrTerm := grandparent.Tight || node.Parent.ListFlags&ListTypeTerm != 0
 	return grandparent.Type == List && tightOrTerm
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 }
 
 func cellAlignment(align CellAlignFlags) string {

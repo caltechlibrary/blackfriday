@@ -19,61 +19,6 @@ import (
 	"testing"
 )
 
-<<<<<<< HEAD
-func runMarkdownReference(input string, flag int) string {
-	renderer := HtmlRenderer(0, "", "")
-	return string(Markdown([]byte(input), renderer, flag))
-}
-
-func doTestsReference(t *testing.T, files []string, flag int) {
-	// catch and report panics
-	var candidate string
-	defer func() {
-		if err := recover(); err != nil {
-			t.Errorf("\npanic while processing [%#v]: %s\n", candidate, err)
-		}
-	}()
-
-	for _, basename := range files {
-		filename := filepath.Join("testdata", basename+".text")
-		inputBytes, err := ioutil.ReadFile(filename)
-		if err != nil {
-			t.Errorf("Couldn't open '%s', error: %v\n", filename, err)
-			continue
-		}
-		input := string(inputBytes)
-
-		filename = filepath.Join("testdata", basename+".html")
-		expectedBytes, err := ioutil.ReadFile(filename)
-		if err != nil {
-			t.Errorf("Couldn't open '%s', error: %v\n", filename, err)
-			continue
-		}
-		expected := string(expectedBytes)
-
-		// fmt.Fprintf(os.Stderr, "processing %s ...", filename)
-		actual := string(runMarkdownReference(input, flag))
-		if actual != expected {
-			t.Errorf("\n    [%#v]\nExpected[%#v]\nActual  [%#v]",
-				basename+".text", expected, actual)
-		}
-		// fmt.Fprintf(os.Stderr, " ok\n")
-
-		// now test every prefix of every input to check for
-		// bounds checking
-		if !testing.Short() {
-			start, max := 0, len(input)
-			for end := start + 1; end <= max; end++ {
-				candidate = input[start:end]
-				// fmt.Fprintf(os.Stderr, "  %s %d:%d/%d\n", filename, start, end, max)
-				_ = runMarkdownReference(candidate, flag)
-			}
-		}
-	}
-}
-
-=======
->>>>>>> 3e56bb68c8876389c631e9e318ce3c092a0906db
 func TestReference(t *testing.T) {
 	t.Parallel()
 	files := []string{
